@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Employee Detail</title>
+</head>
+<body>
+    <h1>Employee Detail</h1>
+    <p><strong>Name:</strong> {{ employee.firstName }} {{ employee.lastName }}</p>
+    <p><strong>Email:</strong> {{ employee.email }}</p>
+    <p><a href="{% url 'employee_update' employee.pk %}">Edit</a> | <a href="{% url 'employee_delete' employee.pk %}">Delete</a></p>
+    <a href="{% url 'employee_list' %}">Back to Employee List</a>
+</body>
+</html>
