@@ -1,13 +1,28 @@
+{% load static %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Manage Rota</title>
-    <!-- Add any additional CSS or meta tags as needed -->
+    <title>Manage Schedule</title>
+    <!-- External CSS -->
+    <link rel="stylesheet" href="{% static 'css/navbar.css' %}">
+    <!-- Header -->
+    {% include 'navbar.html' %}
 </head>
 <body>
-    <h1>Manage Rota</h1>
-    <!-- Add your HTML content for managing the rota here -->
+
+{% include 'list_all_employees.html' %}
+<!-- Include the schedule.html -->
+{% include 'rota.html' %}
+
+<!-- Form to assign a shift -->
+<h2>Assign Employee to Shift</h2>
+<form method="POST">
+    {% csrf_token %}
+    {{ assignment_form.as_p }}
+    <button type="submit">Assign Employee to Shift</button>
+</form>
+
 </body>
 </html>

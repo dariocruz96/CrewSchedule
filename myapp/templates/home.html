@@ -1,3 +1,4 @@
+{% load static %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -5,44 +6,22 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Team Scheduling Web App</title>
     <!-- External CSS -->
-    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="{% static 'css/navbar.css' %}">
+    <!-- Header -->
+    {% include 'navbar.html' %}
 </head>
 <body>
-    <!-- Header -->
-    <header>
-        <h1>Team Scheduling Web App</h1>
-        <nav>
-            <ul>
-                <li><a href="#">Home</a></li>
-                <li><a href="employees">Employees</a></li>
-                <li><a href="manage-rota">Manage Rota</a></li>
-                <li><a href="#">Schedule</a></li>
-                <li><a href="#">Team Members</a></li>
-                <li><a href="#">Settings</a></li>
-            </ul>
-        </nav>
-    </header>
+    
 
     <!-- Main Content -->
     <main>
-        <section class="schedule">
-            <h2>Weekly Schedule</h2>
-            <!-- Calendar or schedule display -->
-            <div class="calendar">
-                <!-- Calendar content goes here -->
-            </div>
-        </section>
-
         <section class="team-members">
             <h2>Team Members</h2>
             <!-- List of team members -->
-            <ul>
-                <li>John Doe</li>
-                <li>Jane Smith</li>
-                <li>Adam Johnson</li>
-                <!-- Add more team members as needed -->
-            </ul>
+            {% include 'list_all_employees.html' %}
         </section>
+        <!-- Include the rota.html -->
+        {% include 'rota.html' %}
     </main>
 
     <!-- Footer -->

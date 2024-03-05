@@ -1,0 +1,7 @@
+    <ul>
+        {% for employee in employees %}
+            <li><a href="{% url 'employee_detail' employee.pk %}">{{ employee.firstName }} {{ employee.lastName }}</a></li>
+        {% endfor %}
+    </ul>
+
+

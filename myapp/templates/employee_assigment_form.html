@@ -1,0 +1,18 @@
+<form method="POST" action="{% url 'assign_employee' %}">
+    {% csrf_token %}
+    <label for="shift">Shift:</label>
+    <select id="shift" name="shift">
+        {% for shift in shifts %}
+            <option value="{{ shift.id }}">{{ shift.day_of_week }} - {{ shift.start_time }} to {{ shift.end_time }}</option>
+        {% endfor %}
+    </select>
+
+    <label for="employee">Employee:</label>
+    <select id="employee" name="employee">
+        {% for employee in employees %}
+            <option value="{{ employee.id }}">{{ employee.first_name }} {{ employee.last_name }}</option>
+        {% endfor %}
+    </select>
+
+    <button type="submit">Assign Employee</button>
+</form>

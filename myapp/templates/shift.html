@@ -1,0 +1,17 @@
+<form method="POST" action="{% url 'create_shift' %}">
+    {% csrf_token %}
+    <label for="start_time">Start Time:</label>
+    <input type="time" id="start_time" name="start_time">
+
+    <label for="end_time">End Time:</label>
+    <input type="time" id="end_time" name="end_time">
+
+    <label for="day_of_week">Day of Week:</label>
+    <select id="day_of_week" name="day_of_week">
+        <option value="Monday">Monday</option>
+        <option value="Tuesday">Tuesday</option>
+        <!-- Add options for other days of the week -->
+    </select>
+
+    <button type="submit">Create Shift</button>
+</form>

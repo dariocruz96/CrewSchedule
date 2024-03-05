@@ -1,0 +1,27 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Manage Schedule</title>
+    <!-- External CSS -->
+    <link rel="stylesheet" href="{% static 'css/navbar.css' %}">
+    <!-- Header -->
+    {% include 'navbar.html' %}
+</head>
+<!-- Existing Shifts -->
+<h2>Existing Shifts</h2>
+<ul>
+    {% for shift in shifts %}
+    <li>{{ shift.day_of_week }} - {{ shift.start_time }} to {{ shift.end_time }}</li>
+    {% endfor %}
+</ul>
+
+<!-- Form to add new shift -->
+<h2>Add New Shift</h2>
+<form method="post">
+    {% csrf_token %}
+    {{ shift_form.as_p }}
+    <button type="submit">Create Shift</button>
+</form>
