@@ -17,6 +17,12 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 import os
 DIRNAME = os.path.abspath(os.path.dirname(__file__))
 
+CORS_ORIGIN_ALLOW_ALL = False  # Set to True to allow all origins, or False to whitelist specific origins
+CORS_ORIGIN_WHITELIST = [
+    'http://localhost:3000',  # Add the URL of your React frontend
+    # Add other allowed origins as needed
+]
+
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/5.0/howto/deployment/checklist/
@@ -40,6 +46,8 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'myapp',
+    'rest_framework',
+    'corsheaders',
 ]
 
 MIDDLEWARE = [
@@ -50,6 +58,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'corsheaders.middleware.CorsMiddleware',
 ]
 
 ROOT_URLCONF = 'CrewSchedule.urls'

@@ -1,0 +1,11 @@
+{
+  "name": "crewschedule",
+  "version": "1.0.0",
+  "description": "Webb app using Python and Django to manage teams and working schedules. (Dissertation Project)",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC"
+}

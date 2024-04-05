@@ -1,6 +1,12 @@
 <h1>Rota</h1>
 <table border="1">
     <tr>
+        <th></th>
+        {% for day in week_calendar_days %}
+        <th>{{ day }}</th>
+        {% endfor %}
+    </tr>
+    <tr>
         <th>Employee</th>
         <!-- Loop through days of the week to display headers -->
         {% for day in days_of_week %}
@@ -16,12 +22,17 @@
         <td>
             <!-- Find assignments for this employee and day -->
             {% for assignment in rota %}
-            {% if assignment.employee == employee and assignment.shift.day_of_week == day %}
-            {{ assignment.shift.start_time }} - {{ assignment.shift.end_time }}
-            {% endif %}
-            {% endfor %}
+        {% if assignment.employee == employee and assignment.shift.day_of_week == day %}
+        <span>{{ assignment.shift.start_time }} - {{ assignment.shift.end_time }}</span><br>
+        {% endif %}
+        {% endfor %}
         </td>
         {% endfor %}
     </tr>
     {% endfor %}
 </table>
+<button id="current-week-btn">Current Week</button>
+<!-- Add a button to navigate to the next week -->
+<button id="next-week-btn">Next Week</button>
+<input type="date" id="week-picker">
+<button id="view-week-btn">View Week</button>

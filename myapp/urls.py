@@ -30,5 +30,9 @@ urlpatterns = [
     path('assign-employee/<int:shift_id>/', views.assign_employee, name='assign_employee'),
     path('success_page', views.manage_rota_view, name='success_page'),
     path('test-add-to-schedule/', views.test_add_to_schedule, name='test_add_to_schedule'),
-
+    path('api/employee/', views.EmployeeView.as_view(), name='employee-list'),
+    path('api/rota/', views.RotaView.as_view(), name='rota'),
+    path('api/update-shifts/', views.UpdateShifts.as_view(), name='update-shifts'),
+    path('api/shifts/', views.Shifts.as_view(), name='shifts'),
+    path('api/shifts-assigned/', views.EmployeeAssignment.as_view(), name='shifts-assigned'),
 ]
