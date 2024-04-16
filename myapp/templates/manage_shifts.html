@@ -7,6 +7,8 @@
     <title>Manage Schedule</title>
     <!-- External CSS -->
     <link rel="stylesheet" href="{% static 'css/navbar.css' %}">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script src="{% static 'scripts/add_shift_time.js' %}"></script>
     <!-- Header -->
     {% include 'navbar.html' %}
 </head>
@@ -14,7 +16,7 @@
 <h2>Existing Shifts</h2>
 <ul>
     {% for shift in shifts %}
-    <li>{{ shift.day_of_week }} - {{ shift.start_time }} to {{ shift.end_time }}</li>
+    <li>{{ shift.date }} - {{ shift.start_time }} to {{ shift.end_time }}</li>
     {% endfor %}
 </ul>
 
@@ -25,3 +27,4 @@
     {{ shift_form.as_p }}
     <button type="submit">Create Shift</button>
 </form>
+

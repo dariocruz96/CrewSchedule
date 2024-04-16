@@ -189,9 +189,7 @@ def manage_rota_view(request):
     # Calculate the end date of the week (Sunday)
     end_of_week = start_of_week + timedelta(days=6)
     # Generate the list of dates for the week
-    week_calendar_days = [(start_of_week + timedelta(days=i)).strftime("%m/%d") for i in range(7)]
-    
-    # Handle form submission for adding a new shift
+    week_calendar_days = [(start_of_week + timedelta(days=i)).strftime("%B %d, %Y") for i in range(7)]
     if request.method == 'POST':
         form = ShiftForm(request.POST)
         if form.is_valid():
@@ -199,7 +197,6 @@ def manage_rota_view(request):
             return redirect('manage_rota')  # Redirect to manage rota page after adding shift
     else:
         form = ShiftForm()
-
     # Handle form submission for assigning an employee to a shift
     if request.method == 'POST':
         assignment_form = EmployeeAssignmentForm(request.POST)

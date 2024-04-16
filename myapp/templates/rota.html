@@ -3,32 +3,37 @@
     <tr>
         <th></th>
         {% for day in week_calendar_days %}
-        <th>{{ day }}</th>
+            <th>{{ day }}</th>
         {% endfor %}
     </tr>
     <tr>
         <th>Employee</th>
         <!-- Loop through days of the week to display headers -->
         {% for day in days_of_week %}
-        <th>{{ day }}</th>
+            <th>{{ day }}</th>
         {% endfor %}
     </tr>
     <!-- Loop through employees -->
     {% for employee in employees %}
-    <tr>
-        <td>{{ employee.firstName }} {{ employee.lastName }}</td>
-        <!-- Loop through days of the week -->
-        {% for day in days_of_week %}
-        <td>
-            <!-- Find assignments for this employee and day -->
-            {% for assignment in rota %}
-        {% if assignment.employee == employee and assignment.shift.day_of_week == day %}
-        <span>{{ assignment.shift.start_time }} - {{ assignment.shift.end_time }}</span><br>
-        {% endif %}
-        {% endfor %}
-        </td>
-        {% endfor %}
-    </tr>
+        <tr>
+            <td>{{ employee.firstName }} {{ employee.lastName }}</td>
+            <!-- Loop through days of the week -->
+            {% for day in week_calendar_days %}
+                <td>
+                    <!-- Find assignments for this employee and day -->
+                    {% for assignment in rota %}
+                        {% with formatted_assignment_date=assignment.shift.date|date:"F d, Y" %}
+                    {% if formatted_assignment_date == day and assignment.employee == employee  %}
+                        <span>{{ assignment.shift.start_time }} - {{ assignment.shift.end_time }}</span><br>
+                    {% endif %}
+                {% endwith %}
+            {% empty %}
+                <!-- If there's no assignment for this day, display an empty cell -->
+                &nbsp;
+            {% endfor %}
+                </td>
+            {% endfor %}
+        </tr>
     {% endfor %}
 </table>
 <button id="current-week-btn">Current Week</button>

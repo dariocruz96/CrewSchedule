@@ -2,9 +2,10 @@ from django.db import models
 from django.contrib.auth.models import User
 from django.utils import timezone
 
+
 class Employee(models.Model):
-    firstName = models.CharField(max_length=50)
-    lastName = models.CharField(max_length=50)
+    firstName = models.CharField(max_length=50, verbose_name='First Name')
+    lastName = models.CharField(max_length=50, verbose_name='Last Name')
     email = models.EmailField(unique=True)
     password = models.CharField(max_length=128)  # Hashed password
     # Add other fields as needed
@@ -15,6 +16,7 @@ class Employee(models.Model):
         return f"{self.firstName} {self.lastName}"
 
 class Shift(models.Model):
+
     DAY_CHOICES = [
         ('Monday', 'Monday'),
         ('Tuesday', 'Tuesday'),
@@ -26,13 +28,13 @@ class Shift(models.Model):
     ]
     start_time = models.TimeField()
     end_time = models.TimeField()
-    day_of_week = models.CharField(max_length=10, choices=DAY_CHOICES)
+    date = models.DateField()
 
     class Meta:
         db_table = 'shift'
 
     def __str__(self):
-        return f"{self.day_of_week} - {self.start_time} to {self.end_time}"
+        return f"{self.date} - {self.start_time} to {self.end_time}"
     
 class Rota(models.Model):
     employee = models.ForeignKey(Employee, on_delete=models.CASCADE)

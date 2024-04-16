@@ -1,5 +1,6 @@
 from django import forms
 from .models import Employee, Shift, EmployeeShift, Rota
+from django.forms.widgets import DateInput,TimeInput
 
 class EmployeeForm(forms.ModelForm):
     class Meta:
@@ -12,8 +13,12 @@ class EmployeeForm(forms.ModelForm):
 class ShiftForm(forms.ModelForm):
     class Meta:
         model = Shift
-        fields = ['start_time', 'end_time', 'day_of_week']
-
+        fields = ['start_time', 'end_time', 'date']
+        widgets = {
+            'start_time': forms.TimeInput(attrs={'type': 'time'}),  # Use  TimeInput widget for start_time
+            'end_time': forms.TimeInput(attrs={'type': 'time'}),    # Use  TimeInput widget for end_time
+            'date': forms.DateInput(attrs={'type': 'date'})  # Use DateInput widget for the 'date' field
+        }
 class EmployeeShiftForm(forms.ModelForm):
     # Define a field to select employees for the shift
     employees = forms.ModelMultipleChoiceField(queryset=Employee.objects.all(), required=False)
