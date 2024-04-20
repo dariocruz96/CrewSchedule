@@ -22,6 +22,7 @@ urlpatterns = [
     path('manage-users/', views.manage_users_view, name='manage_users'),
     path('manage-rota/', views.manage_rota_view, name='manage_rota'),
     path('manage-shifts/', views.manage_shifts_view, name='manage_shifts'),
+    path('manage-shifts/<int:pk>/edit/', views.shift_update, name='shift_update'),
     path('employees/', views.employee_list, name='employee_list'),
     path('employee/<int:pk>/', views.employee_detail, name='employee_detail'),
     path('employee/new/', views.employee_create, name='employee_create'),
@@ -33,6 +34,8 @@ urlpatterns = [
     path('api/employee/', views.EmployeeView.as_view(), name='employee-list'),
     path('api/rota/', views.RotaView.as_view(), name='rota'),
     path('api/update-shifts/', views.UpdateShifts.as_view(), name='update-shifts'),
+    path('api/shifts/<int:pk>/', views.Shifts.as_view(), name='shift-detail'),
     path('api/shifts/', views.Shifts.as_view(), name='shifts'),
     path('api/shifts-assigned/', views.EmployeeAssignment.as_view(), name='shifts-assigned'),
+    path("manage-rota/update_shift/", views.update_shift, name="update_shift"),
 ]

@@ -14,7 +14,6 @@
 </head>
 <body>
 
-{% include 'list_all_employees.html' %}
 <!-- Include the schedule.html -->
 {% include 'rota.html' %}
 
@@ -26,9 +25,42 @@
     <button type="submit">Assign Employee to Shift</button>
 </form>
 
+<h1>{% if form.instance.pk %}Update Shift{% else %}Create Shift{% endif %}</h1>
+    <form method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit">Save</button>
+    </form>
+
+
+<!-- Modal for updating shifts -->
+<div id="shiftUpdateModal" class="modal">
+    <div class="modal-content">
+        <span class="close" onclick="closeShiftUpdateModal()">&times;</span>
+        <h2>Update Shift</h2>
+        <form id="shiftUpdateForm" method="post" action="">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <button type="submit">Save</button>
+        </form>
+    </div>
+</div>
+
+
+<button onclick="openShiftEditPopup('{{ pk }}'); return false;">
+    Open Popup
+</button>
 </body>
 </html>
 <script >
+    function openShiftEditPopup(pk) {
+        // Construct the URL with the dynamic pk value
+        const url = `/manage-shifts/${pk}/edit`;
+
+        // Open a new popup window with the constructed URL
+        window.open(url, 'ManageShiftEdit', 'width=400,height=600,toolbar=no,scrollbars=yes,resizable=yes');
+    }
+    
     document.getElementById('current-week-btn').addEventListener('click', function() {
         // Get the current URL
         var currentUrl = window.location.href;
@@ -110,4 +142,62 @@
         // Redirect to the URL
         window.location.href = url;
     });
+
+    // JavaScript functions for handling the popup window and form submission
+    function openShiftUpdatePopup(shiftId) {
+            const popup = document.getElementById('shiftUpdatePopup');
+            popup.style.display = 'block';
+            // Set the action URL of the form dynamically based on the shiftId
+            const form = document.getElementById('shiftUpdateForm');
+            form.action = `/api/shifts/${shiftId}/`;  // Adjust the API endpoint URL
+
+            // Optional: Fetch shift details and populate form fields here (using AJAX)
+        }
+
+        function closeShiftUpdatePopup() {
+            const popup = document.getElementById('shiftUpdatePopup');
+            popup.style.display = 'none';
+        }
+
+        function submitShiftUpdate(event) {
+            event.preventDefault();
+            const form = event.target;
+            
+            // Perform form submission using AJAX (e.g., fetch API)
+            fetch(form.action, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                    'X-CSRFToken': '{{ csrf_token }}'  // Include CSRF token dynamically
+                },
+                body: new URLSearchParams(new FormData(form))
+            })
+            .then(response => {
+                if (response.ok) {
+                    console.log('Shift updated successfully');
+                    closeShiftUpdatePopup();  // Close popup on success
+                } else {
+                    console.error('Error updating shift:', response.statusText);
+                    // Handle error (display message, etc.)
+                }
+            })
+            .catch(error => {
+                console.error('Error updating shift:', error);
+                // Handle error (display message, etc.)
+            });
+        }
+    
+        function openShiftUpdateModal(shiftId) {
+        const modal = document.getElementById('shiftUpdateModal');
+        modal.style.display = 'block';
+
+        // Set the action URL for the form based on the shiftId
+        const form = document.getElementById('shiftUpdateForm');
+        form.action = `/manage-shifts/${shiftId}/edit/`;
+    }
+
+    function closeShiftUpdateModal() {
+        const modal = document.getElementById('shiftUpdateModal');
+        modal.style.display = 'none';
+    }
 </script>

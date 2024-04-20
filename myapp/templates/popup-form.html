@@ -1,0 +1,64 @@
+<div id="popup-form" style="display: none;">
+    <h2>Edit Shift</h2>
+    <form id="shift-form">
+        <!-- Input fields for shift details -->
+        <label for="start-time">Start Time:</label>
+        <input type="text" id="start-time" name="start-time" required><br>
+        <label for="end-time">End Time:</label>
+        <input type="text" id="end-time" name="end-time" required><br>
+        <!-- Hidden fields to store employee and date -->
+        <input type="hidden" id="employee-name" name="employee-name">
+        <input type="hidden" id="shift-date" name="shift-date">
+        <button type="submit">Save</button>
+    </form>
+</div>
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+    // Get all table cells with shift information
+    const cells = document.querySelectorAll('td');
+
+    // Attach click event listener to each cell
+    cells.forEach(cell => {
+        cell.addEventListener('click', function() {
+            // Get employee name and shift details from the cell
+            const employeeName = this.parentElement.querySelector('td:first-child').textContent.trim();
+            const shiftDetails = this.querySelector('span').dataset;
+
+            // Populate the popup form with the shift details
+            document.getElementById('start-time').value = shiftDetails.startTime;
+            document.getElementById('end-time').value = shiftDetails.endTime;
+            document.getElementById('employee-name').value = employeeName;
+            document.getElementById('shift-date').value = shiftDetails.shiftDate;
+
+            // Show the popup form
+            document.getElementById('popup-form').style.display = 'block';
+        });
+    });
+
+    // Handle form submission (you may need AJAX to submit the form)
+    document.getElementById('shift-form').addEventListener('submit', function(event) {
+        event.preventDefault();
+        // Extract form data and send to server via AJAX
+        const formData = new FormData(this);
+
+        // Example AJAX code (you'll need to implement this)
+        fetch('/save-shift', {
+            method: 'POST',
+            body: formData
+        })
+        .then(response => {
+            if (response.ok) {
+                // Shift saved successfully, close popup and possibly update UI
+                document.getElementById('popup-form').style.display = 'none';
+                // You can update the UI here if needed
+            } else {
+                // Handle error case
+                console.error('Failed to save shift');
+            }
+        })
+        .catch(error => {
+            console.error('Error occurred:', error);
+        });
+    });
+});
+</script>

@@ -1,3 +1,21 @@
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+}
+
+header {
+    background-color: #333;
+    color: #fff;
+    text-align: center;
+    padding: 20px 0;
+}
+
+main {
+    padding: 20px;
+}
+
+
 nav ul {
     list-style-type: none;
     background-color: #5c5c5c;
@@ -45,4 +63,11 @@ nav ul li ul li a {
 
 nav ul li ul li a:hover {
     background-color: #f5f5f5;
+}
+
+footer {
+    background-color: #333;
+    color: #fff;
+    text-align: center;
+    padding: 20px 0;
 }

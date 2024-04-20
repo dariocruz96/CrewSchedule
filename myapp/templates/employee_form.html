@@ -1,17 +1,60 @@
+{% load static %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{% if form.instance.pk %}Update Employee{% else %}Create Employee{% endif %}</title>
+    <!-- Include CSS files -->
+    <link rel="stylesheet" href="{% static 'css/navbar.css' %}">
+    <link rel="stylesheet" href="{% static 'css/team_members_list.css' %}">
+    <link rel="stylesheet" href="{% static 'css/new_starter.css' %}">
 </head>
 <body>
-    <h1>{% if form.instance.pk %}Update Employee{% else %}Create Employee{% endif %}</h1>
-    <form method="post">
-        {% csrf_token %}
-        {{ form.as_p }}
-        <button type="submit">Save</button>
-    </form>
-    <a href="{% url 'employee_list' %}">Cancel</a>
+    <!-- Header -->
+    {% include 'navbar.html' %}
+
+    <div class="form">
+        <!-- Form title and subtitle -->
+        <div class="title">{% if form.instance.pk %}Update Employee{% else %}Create Employee{% endif %}</div>
+
+        <form method="post">
+            {% csrf_token %}
+
+            <!-- First name input -->
+            <div class="input-container ic1">
+                <input id="id_firstName" class="input" type="text" name="firstName" placeholder=" " value="{% if form.instance.pk %}{{ form.instance.firstName }}{% endif %}" />
+                <div class="cut"></div>
+                <label for="id_firstName" class="placeholder">First name</label>
+            </div>
+
+            <!-- Last name input -->
+            <div class="input-container ic2">
+                <input id="id_lastName" class="input" type="text" name="lastName" placeholder=" " value="{% if form.instance.pk %}{{ form.instance.lastName }}{% endif %}" />
+                <div class="cut"></div>
+                <label for="id_lastName" class="placeholder">Last name</label>
+            </div>
+
+            <!-- Email input -->
+            <div class="input-container ic3">
+                <input id="id_email" class="input" type="text" name="email" placeholder=" " value="{% if form.instance.pk %}{{ form.instance.email }}{% endif %}" />
+                <div class="cut cut-short"></div>
+                <label for="id_email" class="placeholder">Email</label>
+            </div>
+
+            <!-- Password input -->
+            <div class="input-container ic4">
+                <input id="id_password" class="input" type="password" name="password" placeholder=" " value="{% if form.instance.pk %}{{ form.instance.password }}{% endif %}" />
+                <div class="cut"></div>
+                <label for="id_password" class="placeholder">Password</label>
+            </div>
+
+            <!-- Submit button -->
+            <button class="submit" type="submit">Save</button>
+            <!-- Cancel button -->
+            <a class="button" href="{% url 'employee_list' %}">Cancel</a>
+        </form>
+    </div>
+
 </body>
 </html>

@@ -1,10 +1,12 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
+from django.views.decorators.http import require_POST
 from .forms import EmployeeForm, ShiftForm, EmployeeAssignmentForm
 from .models import Employee, EmployeeAssignment, Shift, Rota
 from .serializers import EmployeeSerializer, RotaSerializer, ShiftSerializer, EmployeeAssignmentSerializer
 from datetime import datetime, timedelta
+from rest_framework import status
 from rest_framework.views import APIView
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
@@ -107,36 +109,18 @@ def create_shift(request):
             return redirect('manage_rota')  # Redirect to manage rota page after creating shift and assignment
     else:
         shift_form = ShiftForm()
+    return render(request, 'shift_form.html', {'shift_form': shift_form})
 
-    return render(request, 'create_shift.html', {'shift_form': shift_form})
-
-@csrf_exempt  # This decorator allows the view to accept POST requests without CSRF token
-def update_shifts(request):
+def shift_update(request, pk):
+    shift = get_object_or_404(Shift, pk=pk)
     if request.method == 'POST':
-        # Extract updated shift data from the request payload
-        updated_shifts = request.POST.get('updated_shifts')  # Adjust this according to your frontend data structure
-        
-        # Iterate over the updated shift data and update shifts in the database
-        for shift_data in updated_shifts:
-            shift_id = shift_data['id']  # Assuming you have an 'id' field in your frontend data
-            new_start_time = shift_data['start_time']  # Assuming 'start_time' is one of the fields to be updated
-            new_end_time = shift_data['end_time']  # Assuming 'end_time' is one of the fields to be updated
-            
-            # Get the shift object from the database
-            shift = Shift.objects.get(id=shift_id)
-            
-            # Update the shift fields
-            shift.start_time = new_start_time
-            shift.end_time = new_end_time
-            
-            # Save the updated shift
-            shift.save()
-        
-        # Return a success response
-        return JsonResponse({'message': 'Shifts updated successfully'}, status=200)
+        form = ShiftForm(request.POST, instance=shift)
+        if form.is_valid():
+            form.save()
+            return redirect('manage_rota')
     else:
-        # If the request method is not POST, return an error response
-        return JsonResponse({'error': 'Only POST requests are allowed'}, status=405)
+        form = ShiftForm(instance=shift)
+    return render(request, 'shift_form.html', {'form': form})
     
 def assign_employee(request):
     if request.method == 'POST':
@@ -235,7 +219,7 @@ def manage_shifts_view(request):
             return redirect('manage_shifts')  # Redirect to manage rota page after adding shift
     else:
         form = ShiftForm()
-
+    
     # Render the template with the necessary context variables
     return render(request, 'manage_shifts.html', {
         'shifts': shifts,
@@ -243,6 +227,24 @@ def manage_shifts_view(request):
         'days_of_week': days_of_week,
         'rota': rota,  # Pass rota data to the template
     })
+
+@require_POST
+def update_shift(request):
+    if request.method == "POST" and request.headers.get("HTTP_X_REQUESTED_WITH") == "XMLHttpRequest":
+        start_time = request.POST.get("startTime")
+        end_time = request.POST.get("endTime")
+        shift_id = request.POST.get("shiftId")
+
+        try:
+            shift = Shift.objects.get(id=shift_id)
+            shift.start_time = start_time
+            shift.end_time = end_time
+            shift.save()
+            return JsonResponse({"success": True})
+        except Shift.DoesNotExist:
+            return JsonResponse({"success": False, "error": "Shift not found."})
+
+    return JsonResponse({"success": False, "error": "Invalid request."})
 
 def register_employee(request):
 
@@ -285,10 +287,28 @@ class RotaView(APIView):
         return Response(serializer.data)
     
 class Shifts(APIView):
-    def get(self, request):
-        queryset = Shift.objects.all()
-        serializer = ShiftSerializer(queryset, many=True)
-        return Response(serializer.data)
+    def get(self, request, pk=None):  # Add pk as a parameter
+        if pk is not None:
+            # Retrieve a specific shift by ID
+            shift = get_object_or_404(Shift, pk=pk)
+            serializer = ShiftSerializer(shift)
+            return Response(serializer.data)
+        else:
+            # Retrieve all shifts if no ID is provided
+            queryset = Shift.objects.all()
+            serializer = ShiftSerializer(queryset, many=True)
+            return Response(serializer.data)
+        
+    def put(self, request, pk):
+        shift = get_object_or_404(Shift, pk=pk)
+        serializer = ShiftSerializer(shift, data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data)
+        else:
+            # Print serializer errors to inspect validation issues
+            print(serializer.errors)
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 class UpdateShifts(APIView):
     def post(self, request):
@@ -313,4 +333,16 @@ class UpdateShifts(APIView):
             shift.save()
         
         return Response({'message': 'Shifts updated successfully'}, status=status.HTTP_200_OK)
+    
+    class ShiftDetail(APIView):
+        def get(self, request, pk):
+            # Retrieve the Shift object from the database
+            shift = get_object_or_404(Shift, pk=pk)
+
+            # Serialize the Shift object to JSON using ShiftSerializer
+            serializer = ShiftSerializer(shift)
+
+            # Return the serialized data as a response
+            return Response(serializer.data)
+
 # End of API calls views----------------------------------------------------

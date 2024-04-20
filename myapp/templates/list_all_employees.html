@@ -1,7 +1,30 @@
-    <ul>
-        {% for employee in employees %}
-            <li><a href="{% url 'employee_detail' employee.pk %}">{{ employee.firstName }} {{ employee.lastName }}</a></li>
-        {% endfor %}
-    </ul>
+<center>
+    <h1>Our Team</h1>
+    <hr>
 
+    <!-- Sort employees by first name in alphabetical order -->
+    {% for employee in employees|dictsort:'firstName' %}
+    <div class="row">
+        <div class="column" id="gfg">
+            <div class="card">
+                <i class="fa fa-user-circle" style="font-size:68px;"></i>
 
+                <div class="container">
+                    <img src="../static/images/avatar.png" class="fa fa-user-circle" alt="avatar image" style="width: 50px; height: 50px; border-radius: 50%;">
+                    <!-- Display employee name and role -->
+                    <h2>{{ employee.firstName }} {{ employee.lastName }}</h2>
+                    <p>{{ employee.role }}</p>
+
+                    <!-- Display additional information about the employee -->
+                    <p>{{ employee.email }}</p>
+
+                    <!-- Button to view employee details -->
+                    <a class="button" href="{% url 'employee_detail' employee.pk %}">View</a>
+                    <a class="button" href="{% url 'employee_update' employee.pk %}">Edit</a>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+
+</center>

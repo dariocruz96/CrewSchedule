@@ -1,4 +1,3 @@
-<h1>Rota</h1>
 <table border="1">
     <tr>
         <th></th>
@@ -14,27 +13,32 @@
         {% endfor %}
     </tr>
     <!-- Loop through employees -->
-    {% for employee in employees %}
-        <tr>
-            <td>{{ employee.firstName }} {{ employee.lastName }}</td>
-            <!-- Loop through days of the week -->
-            {% for day in week_calendar_days %}
-                <td>
-                    <!-- Find assignments for this employee and day -->
-                    {% for assignment in rota %}
-                        {% with formatted_assignment_date=assignment.shift.date|date:"F d, Y" %}
+{% for employee in employees|dictsort:'firstName' %}
+<tr>
+    <td>{{ employee.firstName }} {{ employee.lastName }}</td>
+    <!-- Loop through days of the week -->
+    {% for day in week_calendar_days %}
+        <td>
+            <!-- Find assignments for this employee and day -->
+            {% for assignment in rota %}
+                {% with formatted_assignment_date=assignment.shift.date|date:"F d, Y" %}
                     {% if formatted_assignment_date == day and assignment.employee == employee  %}
-                        <span>{{ assignment.shift.start_time }} - {{ assignment.shift.end_time }}</span><br>
+                          <!-- Display shift details with a link to open the modal -->
+                        <span>
+                            <a href="" onclick="openShiftUpdateModal('{{ assignment.shift.pk }}')">
+                                {{ assignment.shift.start_time }} - {{ assignment.shift.end_time }}
+                            </a>
+                        </span>
                     {% endif %}
                 {% endwith %}
             {% empty %}
                 <!-- If there's no assignment for this day, display an empty cell -->
                 &nbsp;
             {% endfor %}
-                </td>
-            {% endfor %}
-        </tr>
+        </td>
     {% endfor %}
+</tr>
+{% endfor %}
 </table>
 <button id="current-week-btn">Current Week</button>
 <!-- Add a button to navigate to the next week -->

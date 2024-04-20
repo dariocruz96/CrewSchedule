@@ -7,6 +7,7 @@
     <title>Team Scheduling Web App</title>
     <!-- External CSS -->
     <link rel="stylesheet" href="{% static 'css/navbar.css' %}">
+    <link rel="stylesheet" href="{% static 'css/rota.css' %}">
     <!-- Header -->
     {% include 'navbar.html' %}
 </head>
@@ -15,11 +16,8 @@
 
     <!-- Main Content -->
     <main>
-        <section class="team-members">
-            <h2>Team Members</h2>
-            <!-- List of team members -->
-            {% include 'list_all_employees.html' %}
-        </section>
+        <!-- List of team members -->
+        {% include 'list_all_employees.html' %}
         <!-- Include the rota.html -->
         {% include 'rota.html' %}
     </main>
@@ -29,4 +27,5 @@
         <p>&copy; 2024 Team Scheduling Web App. All rights reserved.</p>
     </footer>
 </body>
+
 </html>
