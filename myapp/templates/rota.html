@@ -1,3 +1,11 @@
+<!-- Modal for updating shift details -->
+<div id="updateShiftModal" class="modal">
+    <div class="modal-content">
+        <span class="close" onclick="closeShiftUpdateModal()">&times;</span>
+        <div id="modalContent"></div>
+    </div>
+</div>
+
 <table border="1">
     <tr>
         <th></th>
@@ -13,33 +21,35 @@
         {% endfor %}
     </tr>
     <!-- Loop through employees -->
-{% for employee in employees|dictsort:'firstName' %}
-<tr>
-    <td>{{ employee.firstName }} {{ employee.lastName }}</td>
-    <!-- Loop through days of the week -->
-    {% for day in week_calendar_days %}
+    {% for employee in employees|dictsort:'firstName' %}
+    <tr>
+        <td>{{ employee.firstName }} {{ employee.lastName }}</td>
+        <!-- Loop through days of the week -->
+        {% for day in week_calendar_days %}
         <td>
             <!-- Find assignments for this employee and day -->
             {% for assignment in rota %}
-                {% with formatted_assignment_date=assignment.shift.date|date:"F d, Y" %}
-                    {% if formatted_assignment_date == day and assignment.employee == employee  %}
-                          <!-- Display shift details with a link to open the modal -->
-                        <span>
-                            <a href="" onclick="openShiftUpdateModal('{{ assignment.shift.pk }}')">
-                                {{ assignment.shift.start_time }} - {{ assignment.shift.end_time }}
-                            </a>
-                        </span>
-                    {% endif %}
-                {% endwith %}
+            {% with formatted_assignment_date=assignment.shift.date|date:"F d, Y" %}
+            {% if formatted_assignment_date == day and assignment.employee == employee  %}
+            <!-- Display shift details with a link to open the modal -->
+            <span>
+                <a href="#" onclick="openShiftUpdateModal('{{ assignment.shift.pk }}')">
+                    {{ assignment.shift.start_time }} - {{ assignment.shift.end_time }}
+                </a>
+            </span>
+            <button hx-get="{% url 'edit_shift_modal' assignment.shift.pk %}" hx-target="#dialog">{{ assignment.shift.start_time }} to {{ assignment.shift.end_time }}</button>
+            {% endif %}
+            {% endwith %}
             {% empty %}
-                <!-- If there's no assignment for this day, display an empty cell -->
-                &nbsp;
+            <!-- If there's no assignment for this day, display an empty cell -->
+            &nbsp;
             {% endfor %}
         </td>
+        {% endfor %}
+    </tr>
     {% endfor %}
-</tr>
-{% endfor %}
 </table>
+
 <button id="current-week-btn">Current Week</button>
 <!-- Add a button to navigate to the next week -->
 <button id="next-week-btn">Next Week</button>

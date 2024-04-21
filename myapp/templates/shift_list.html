@@ -1,0 +1,19 @@
+
+{% for shift in shifts|dictsort:'date' %}
+    
+
+<tr id="shift-{{ shift.pk }}" class="shift-row">
+    <td>{{ shift.date }}</td>
+    <td>{{ shift.start_time }}</td>
+    <td>{{ shift.end_time }}</td>
+    <td><button hx-get="{% url 'edit_shift_modal' shift.pk %}" hx-target="#dialog">Edit</button>
+        <button class="btn btn-danger btn-sm"
+        hx-confirm="Are you sure you want to delete this shift?"
+        hx-delete="{% url 'delete_shift_modal' shift.pk %}"
+        hx-target="#shift-{{ shift.pk }}"
+        hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}'
+        hx-swap="outerHTML">
+    Delete
+</button>
+</td>
+    {% endfor %}

@@ -1,5 +1,5 @@
 from django.shortcuts import render, redirect, get_object_or_404
-from django.http import JsonResponse
+from django.http import HttpResponse, JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 from django.views.decorators.http import require_POST
 from .forms import EmployeeForm, ShiftForm, EmployeeAssignmentForm
@@ -96,6 +96,51 @@ def employee_delete(request, pk):
 
 # End of employee views----------------------------------------------------
 # Start of Shift views----------------------------------------------------
+def create_shift_modal(request):
+    if request.method == "POST":
+        form = ShiftForm(request.POST)
+        if form.is_valid():
+            form.save()
+            response_headers = {'HX-Trigger': 'shiftChanged'}
+            print("Response Headers:", response_headers)
+            return HttpResponse(status=204, headers={'HX-Trigger': 'shiftChanged'})
+    else:
+        form = ShiftForm()
+    return render(request, 'shift_form.html', {'form': form})
+
+def edit_shift_modal(request, pk):
+    shift = get_object_or_404(Shift, pk=pk)
+    
+    if request.method == 'POST':
+        form = ShiftForm(request.POST, instance=shift)
+        if form.is_valid():
+            form.save()
+            # Return a successful response with HTMX trigger to update the UI
+            return HttpResponse(status=204, headers={'HX-Trigger': 'shiftChanged'})
+    elif request.method == 'DELETE':
+        shift.delete()
+        # Return a successful response with HTMX trigger to update the UI
+        return HttpResponse(status=204, headers={'HX-Trigger': 'shiftChanged'})
+    else:
+        form = ShiftForm(instance=shift)
+    
+    return render(request, 'shift_form.html', {'form': form})
+
+def delete_shift_modal(request, pk):
+    shift = get_object_or_404(Shift, pk=pk)
+    if request.method == 'DELETE':
+        shift.delete()
+        # Return a successful response with HTMX trigger to update the UI
+        return HttpResponse(status=204, headers={'HX-Trigger': 'shiftChanged'})
+    else:
+        return HttpResponse(status=405)  # Method Not Allowed if not a DELETE request
+    
+def shift_list(request):
+    return render(request, 'shift_list.html', {
+        'shifts': Shift.objects.all(),
+    })
+
+
 def create_shift(request):
     if request.method == 'POST':
         shift_form = ShiftForm(request.POST)
@@ -106,7 +151,8 @@ def create_shift(request):
             # Assign the shift to the first employee (you can change this logic)
             employee_assignment = EmployeeAssignment.objects.create(shift=shift, employee=Employee.objects.first())
 
-            return redirect('manage_rota')  # Redirect to manage rota page after creating shift and assignment
+            #return redirect('manage_rota')  # Redirect to manage rota page after creating shift and assignment
+            return HttpResponse(status=204, headers={'HX-Trigger': 'shiftChanged'})
     else:
         shift_form = ShiftForm()
     return render(request, 'shift_form.html', {'shift_form': shift_form})
