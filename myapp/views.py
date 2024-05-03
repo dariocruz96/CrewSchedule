@@ -140,6 +140,27 @@ def shift_list(request):
         'shifts': Shift.objects.all(),
     })
 
+def rota_populate(request):
+    # Get the start of the week from the URL parameter, if provided
+    start_of_week_str = request.GET.get('start_of_week')
+    if start_of_week_str:
+        # Parse the start_of_week string into a datetime object
+        start_of_week = datetime.strptime(start_of_week_str, '%Y/%m/%d')
+    else:
+        # If start_of_week parameter is not provided, default to the nearest past Monday
+        today = datetime.now().date()
+        start_of_week = today - timedelta(days=today.weekday())
+        
+
+    # Calculate the end date of the week (Sunday)
+    end_of_week = start_of_week + timedelta(days=6)
+    # Generate the list of dates for the week
+    week_calendar_days = [(start_of_week + timedelta(days=i)).strftime("%B %d, %Y") for i in range(7)]
+    
+    return render(request, 'rota_modal_populate.html', {
+        'rota': Rota.objects.all(),
+        'week_calendar_days' : week_calendar_days,
+    })
 
 def create_shift(request):
     if request.method == 'POST':
@@ -151,7 +172,6 @@ def create_shift(request):
             # Assign the shift to the first employee (you can change this logic)
             employee_assignment = EmployeeAssignment.objects.create(shift=shift, employee=Employee.objects.first())
 
-            #return redirect('manage_rota')  # Redirect to manage rota page after creating shift and assignment
             return HttpResponse(status=204, headers={'HX-Trigger': 'shiftChanged'})
     else:
         shift_form = ShiftForm()
@@ -224,7 +244,7 @@ def manage_rota_view(request):
         form = ShiftForm(request.POST)
         if form.is_valid():
             form.save()
-            return redirect('manage_rota')  # Redirect to manage rota page after adding shift
+            return HttpResponse(status=204, headers={'HX-Trigger': 'rotaChanged'})
     else:
         form = ShiftForm()
     # Handle form submission for assigning an employee to a shift

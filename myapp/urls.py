@@ -24,6 +24,7 @@ urlpatterns = [
     path('manage-shifts/edit-shift/<int:pk>/', views.edit_shift_modal, name='edit_shift_modal'),
     path('manage-shifts/delete-shift/<int:pk>', views.delete_shift_modal, name='delete_shift_modal'),
     path('shifts/', views.shift_list, name='shift_list'),
+    path('rota-populate/', views.rota_populate, name='rota_populate'),
     path('manage-rota/', views.manage_rota_view, name='manage_rota'),
     path('manage-shifts/', views.manage_shifts_view, name='manage_shifts'),
     path('manage-shifts/<int:pk>/edit/', views.shift_update, name='shift_update'),

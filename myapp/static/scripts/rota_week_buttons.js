@@ -1,70 +1,5 @@
-{% load static %}
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Manage Schedule</title>
-    <!-- External CSS -->
-    <link rel="stylesheet" href="{% static 'css/navbar.css' %}">
-    <link rel="stylesheet" href="{% static 'css/rota.css' %}">
 
-    <!-- Header -->
-    {% include 'navbar.html' %}
-</head>
-<body>
-
-<!-- Include the schedule.html -->
-{% include 'rota.html' %}
-
-<!-- Form to assign a shift -->
-<h2>Assign Employee to Shift</h2>
-<form method="POST">
-    {% csrf_token %}
-    {{ assignment_form.as_p }}
-    <button type="submit">Assign Employee to Shift</button>
-</form>
-
-<h1>{% if form.instance.pk %}Update Shift{% else %}Create Shift{% endif %}</h1>
-    <form method="post">
-        {% csrf_token %}
-        {{ form.as_p }}
-        <button type="submit">Save</button>
-    </form>
-
-
-<!-- Modal for updating shifts -->
-<div id="shiftUpdateModal" class="modal">
-    <div class="modal-content">
-        <span class="close" onclick="closeShiftUpdateModal()">&times;</span>
-        <h2>Update Shift</h2>
-        <form id="shiftUpdateForm" method="post" action="">
-            {% csrf_token %}
-            {{ form.as_p }}
-            <button type="submit">Save</button>
-        </form>
-    </div>
-</div>
-
-</body>
-</html>
-<script >
-    
-    document.getElementById('current-week-btn').addEventListener('click', function() {
-        // Get the current URL
-        var currentUrl = window.location.href;
-
-        // Create a URL object
-        var url = new URL(currentUrl);
-
-        // Remove the 'start_of_week' parameter from the URL
-        url.searchParams.delete('start_of_week');
-
-        // Redirect to the updated URL
-        window.location.href = url.toString();
-
-    })
-    document.getElementById('next-week-btn').addEventListener('click', function() {
+document.getElementById('next-week-btn').addEventListener('click', function() {
     
     console.log('Button clicked!'); // Log a message to the console when the button is clicked
     // Get the current URL
@@ -131,17 +66,3 @@
         // Redirect to the URL
         window.location.href = url;
     });
-
-    const modal = new bootstrap.Modal(document.getElementById("modal"));
-
-    htmx.on("htmx:afterSwap", (e) => {
-    // Response targeting #dialog => show the modal
-    if (e.detail.target.id == "dialog") {
-        modal.show();
-    }
-    });
-
-    htmx.on("hidden.bs.modal", () => {
-    document.getElementById("dialog").innerHTML = "";
-    });
-</script>

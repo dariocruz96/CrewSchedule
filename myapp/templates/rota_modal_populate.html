@@ -1,0 +1,22 @@
+{% for day in week_calendar_days %}
+<td>
+    <!-- Find assignments for this employee and day -->
+    {% for assignment in rota %}
+    {% with formatted_assignment_date=assignment.shift.date|date:"F d, Y" %}
+    {% if formatted_assignment_date == day and assignment.employee == employee %}
+    <!-- Display shift details with a link to open the modal -->
+    <span>
+        <a href="#" onclick="openShiftUpdateModal('{{ assignment.shift.pk }}')">
+            {{ assignment.shift.start_time }} - {{ assignment.shift.end_time }}
+        </a>
+    </span>
+    <button hx-get="{% url 'edit_shift_modal' assignment.shift.pk %}" hx-target="#dialog">{{
+        assignment.shift.start_time }} to {{ assignment.shift.end_time }}</button>
+    {% endif %}
+    {% endwith %}
+    {% empty %}
+    <!-- If there's no assignment for this day, display an empty cell -->
+    &nbsp;
+    {% endfor %}
+</td>
+{% endfor %}
